@@ -6,7 +6,8 @@
 #include <limits>
 #include <random>
 
-constexpr size_t VEC_SIZE = 100000;
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h> // Allows conversion of std::vector to Python lists
 
 std::vector<int64_t>& the_sort(std::vector<int64_t>& vec) {
     std::sort(vec.begin(), vec.end());
@@ -23,15 +24,10 @@ int64_t random_i64() {
     return dis(gen);
 }
 
-int main() {
-    std::vector<int64_t> vec;
-    // vec.reserve(VEC_SIZE);
-    vec.resize(VEC_SIZE);
+// Create the Python bindings
+PYBIND11_MODULE(sorting, m) {
+    m.doc() = "A module to sort vectors using the_sort() function"; // Module docstring
 
-    std::generate(vec.begin(), vec.end(), random_i64);
-    the_sort(vec);
-    // for(auto& num : vec) {
-    //     std::cout << num << " ";
-    // }
-    std::cout << std::endl;
+    m.def("the_sort", &the_sort, "Sorts a vector of integers in-place",
+          pybind11::arg("vec")); // Bind the function
 }
