@@ -48,14 +48,11 @@ jobs:
       run: |
         cd build\Release && ctest --output-on-failure
 
-    - name: Debug PYTHONPATH
-      run: |
-        dir build\Release
-        dir lib
-        echo "PYTHONPATH: $env:PYTHONPATH"
-
     - name: Run Python Tests
       run: |
         venv\Scripts\Activate.ps1
         $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
+        dir build\Release
+        dir lib
+        echo "PYTHONPATH: $env:PYTHONPATH"
         python -m unittest test_pysort
