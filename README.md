@@ -23,7 +23,6 @@ A build engineering demo: C++/Python/CI.
 
 
 ### TODO:
-- CI builds for Windows and Linux
 - Make sure it runs in a Docker container
 - Pack and upload artifacts to Actions
 - Scripts to automate building and packaging
