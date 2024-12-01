@@ -67,4 +67,6 @@ jobs:
         venv\Scripts\Activate.ps1
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
+        echo "S PYTHONPATH: $env:PYTHONPATH"
+        dir $PWD\build\Release
         python -m unittest test_pysort
