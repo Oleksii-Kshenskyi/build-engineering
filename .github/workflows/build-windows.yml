@@ -54,9 +54,8 @@ jobs:
 
     - name: Install dependencies and build everything
       run: |
-        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
-        $CC = "$env:USERPROFILE\scoop\apps\gcc\current\bin\gcc.exe"
-        $CXX = "$env:USERPROFILE\scoop\apps\gcc\current\bin\g++.exe"
+        $env:PATH = "$env:USERPROFILE\scoop\apps\gcc\current\bin;$env:USERPROFILE\scoop\shims;$env:PATH"
+        dir $env:USERPROFILE\scoop\apps\gcc\current\bin
         echo "Forced g++ version: $(g++ --version)"
         venv\Scripts\Activate.ps1
         conan install . --build=missing
