@@ -19,7 +19,7 @@ jobs:
       run: |
         Invoke-Expression "&([scriptblock]::Create((iwr -useb get.scoop.sh)))"
         scoop install cmake python ninja gcc
-        python --version
+        echo "KEK NINJA VERSION: $(ninja --version)"
         python -m venv venv
         venv\Scripts\Activate.ps1
         python -m pip install --upgrade pip
