@@ -1,7 +1,6 @@
 import sorting
 from typing import List
 
-
 def pysort(vec: List[int]) -> List[int]:
     return sorting.the_sort(vec)
 

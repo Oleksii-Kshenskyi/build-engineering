@@ -1,0 +1,53 @@
+name: Build and Test on macOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build on macOS
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install cmake python@3.13 ninja gcc
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install conan
+    
+    - name: Setup Conan profile for MacOS
+      run: |
+        source venv/bin/activate
+        conan profile new default --detect --force
+        conan profile update settings.arch=armv8 default
+        conan profile update settings.compiler=gcc default
+        conan profile update settings.compiler.cppstd=20 default
+        conan profile update settings.compiler.version=14 default
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+
+
+    - name: Install dependencies and build everything
+      run: |
+        source venv/bin/activate
+        conan install . --build=missing
+        conan build .
+
+    # Run C++ tests
+    - name: Run C++ Tests
+      run: |
+        cd build/Release && ctest --output-on-failure
+
+    # Run Python tests
+    - name: Run Python Tests
+      run: |
+        source venv/bin/activate
+        export PYTHONPATH=$(pwd)/build/Release:$(pwd)/test:$PYTHONPATH
+        python -m unittest test_pysort

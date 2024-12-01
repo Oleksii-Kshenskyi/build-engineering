@@ -24,3 +24,4 @@ A build engineering demo: C++/Python/CI.
 - conan install .. --build=missing --output-folder=.
 - cmake .. -DCMAKE_TOOLCHAIN_FILE=./conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 - cmake --build .
+- cd $GITROOT && export PYTHONPATH=$(pwd)/bin/Release:$(pwd)/test:$PYTHONPATH # take care to use this repo's root folder as your $GITROOT here
