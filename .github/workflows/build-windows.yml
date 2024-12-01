@@ -20,6 +20,7 @@ jobs:
         Invoke-Expression "&([scriptblock]::Create((iwr -useb get.scoop.sh)))"
         scoop install cmake python ninja gcc
         echo "KEK NINJA VERSION: $(ninja --version)"
+        echo "KEK NINJA IS HERE: $((Get-Command ninja).Source)"
         python -m venv venv
         venv\Scripts\Activate.ps1
         python -m pip install --upgrade pip
@@ -38,6 +39,8 @@ jobs:
         echo compiler.cppstd=20 >> $env:USERPROFILE\.conan2\profiles\default
         echo [conf] >> $env:USERPROFILE\.conan2\profiles\default
         echo tools.cmake.cmaketoolchain:generator=Ninja >> $env:USERPROFILE\.conan2\profiles\default
+        echo tools.cmake.cmaketoolchain:make_program=$((Get-Command ninja).Source) >> $env:USERPROFILE\.conan2\profiles\default
+        conan profile show
 
 
     - name: Install dependencies and build everything
