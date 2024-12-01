@@ -28,6 +28,9 @@ jobs:
 
     - name: Create Windows Conan Profile
       run: |
+        venv\Scripts\Activate.ps1
+        echo "Checking scoop version: $(scoop --version)"
+        echo "Checking cmake version: $(cmake --version)"
         mkdir -p $env:USERPROFILE\.conan2\profiles
         echo [settings] > $env:USERPROFILE\.conan2\profiles\default
         echo os=Windows >> $env:USERPROFILE\.conan2\profiles\default
