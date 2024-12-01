@@ -22,16 +22,18 @@ jobs:
         python3 -m venv venv
         source venv/bin/activate
         pip install conan
-    
-    - name: Setup Conan profile for MacOS
+
+    - name: Create MacOS Conan Profile
       run: |
-        source venv/bin/activate
-        conan profile detect -f
-        conan profile update settings.arch=armv8 default
-        conan profile update settings.compiler=gcc default
-        conan profile update settings.compiler.cppstd=20 default
-        conan profile update settings.compiler.version=14 default
-        conan profile update settings.compiler.libcxx=libstdc++11 default
+        mkdir -p ~/.conan2/profiles
+        echo "[settings]" > ~/.conan2/profiles/default
+        echo "os=Macos" >> ~/.conan2/profiles/default
+        echo "arch=armv8" >> ~/.conan2/profiles/default
+        echo "build_type=Release" >> ~/.conan2/profiles/default
+        echo "compiler=gcc" >> ~/.conan2/profiles/default
+        echo "compiler.version=14" >> ~/.conan2/profiles/default
+        echo "compiler.libcxx=libstdc++11" >> ~/.conan2/profiles/default
+        echo "compiler.cppstd=20" >> ~/.conan2/profiles/default
 
 
     - name: Install dependencies and build everything
