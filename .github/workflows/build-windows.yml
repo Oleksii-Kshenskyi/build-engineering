@@ -22,6 +22,7 @@ jobs:
         echo "PATH=$env:USERPROFILE\scoop\shims;$env:PATH" >> $GITHUB_ENV
         echo "KEK NINJA VERSION: $(ninja --version)"
         echo "KEK NINJA IS HERE: $((Get-Command ninja).Source)"
+        echo "GITHUB_ENV ? => $GITHUB_ENV"
         python -m venv venv
         venv\Scripts\Activate.ps1
         python -m pip install --upgrade pip
@@ -29,6 +30,7 @@ jobs:
 
     - name: Create Windows Conan Profile
       run: |
+        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         venv\Scripts\Activate.ps1
         echo "Checking PATH: $env:PATH"
         echo "Checking scoop version: $(scoop --version)"
@@ -50,16 +52,19 @@ jobs:
 
     - name: Install dependencies and build everything
       run: |
+        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         venv\Scripts\Activate.ps1
         conan install . --build=missing
         conan build .
 
     - name: Run C++ Tests
       run: |
+        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         cd build\Release && ctest --output-on-failure
 
     - name: Run Python Tests
       run: |
         venv\Scripts\Activate.ps1
+        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
         python -m unittest test_pysort
