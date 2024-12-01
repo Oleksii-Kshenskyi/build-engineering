@@ -53,6 +53,7 @@ jobs:
     - name: Install dependencies and build everything
       run: |
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
+        $env:PATH = $env:PATH -replace "C:\\mingw64\\bin;", ""
         venv\Scripts\Activate.ps1
         conan install . --build=missing
         conan build .
@@ -66,7 +67,7 @@ jobs:
       run: |
         venv\Scripts\Activate.ps1
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
+        $env:PATH = $env:PATH -replace "C:\\mingw64\\bin;", ""
         $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
-        echo "S PYTHONPATH: $env:PYTHONPATH"
-        dir $PWD\build\Release
+        echo "S PATH: $env:PATH"
         python -m unittest test_pysort
