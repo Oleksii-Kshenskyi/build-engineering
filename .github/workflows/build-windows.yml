@@ -35,7 +35,7 @@ jobs:
         echo compiler.libcxx=libstdc++11 >> %USERPROFILE%\.conan2\profiles\default
         echo compiler.cppstd=20 >> %USERPROFILE%\.conan2\profiles\default
         echo [conf] >> %USERPROFILE%\.conan2\profiles\default
-        tools.cmake.cmaketoolchain:generator=Ninja >> %USERPROFILE%\.conan2\profiles\default
+        echo "tools.cmake.cmaketoolchain:generator=Ninja" >> %USERPROFILE%\.conan2\profiles\default
 
     - name: Install dependencies and build everything
       run: |
