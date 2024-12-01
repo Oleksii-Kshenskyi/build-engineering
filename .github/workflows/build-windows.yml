@@ -19,6 +19,7 @@ jobs:
       run: |
         Invoke-Expression "&([scriptblock]::Create((iwr -useb get.scoop.sh)))"
         scoop install cmake python ninja gcc
+        echo "::add-path::$($env:USERPROFILE)\scoop\shims"
         echo "KEK NINJA VERSION: $(ninja --version)"
         echo "KEK NINJA IS HERE: $((Get-Command ninja).Source)"
         python -m venv venv
@@ -29,6 +30,7 @@ jobs:
     - name: Create Windows Conan Profile
       run: |
         venv\Scripts\Activate.ps1
+        echo "Checking PATH: $env:PATH"
         echo "Checking scoop version: $(scoop --version)"
         echo "Checking cmake version: $(cmake --version)"
         mkdir -p $env:USERPROFILE\.conan2\profiles
