@@ -1,0 +1,54 @@
+name: Build and Test on Linux
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake python3.13 python3.13-venv python3.13-dev ninja-build g++
+        python3.13 -m venv venv
+        source venv/bin/activate
+        pip install conan
+
+    - name: Create Linux Conan Profile
+      run: |
+        mkdir -p ~/.conan2/profiles
+        echo "[settings]" > ~/.conan2/profiles/default
+        echo "os=Linux" >> ~/.conan2/profiles/default
+        echo "arch=x86_64" >> ~/.conan2/profiles/default
+        echo "build_type=Release" >> ~/.conan2/profiles/default
+        echo "compiler=gcc" >> ~/.conan2/profiles/default
+        echo "compiler.version=14" >> ~/.conan2/profiles/default
+        echo "compiler.libcxx=libstdc++11" >> ~/.conan2/profiles/default
+        echo "compiler.cppstd=20" >> ~/.conan2/profiles/default
+
+    - name: Install dependencies and build everything
+      run: |
+        source venv/bin/activate
+        conan install . --build=missing
+        conan build .
+
+    # Run C++ tests
+    - name: Run C++ Tests
+      run: |
+        cd build/Release && ctest --output-on-failure
+
+    # Run Python tests
+    - name: Run Python Tests
+      run: |
+        source venv/bin/activate
+        export PYTHONPATH=$(pwd)/build/Release:$(pwd)/test:$PYTHONPATH
+        python -m unittest test_pysort
