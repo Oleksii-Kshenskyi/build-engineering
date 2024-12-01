@@ -26,7 +26,7 @@ jobs:
     - name: Setup Conan profile for MacOS
       run: |
         source venv/bin/activate
-        conan profile new default --detect --force
+        conan profile detect -f
         conan profile update settings.arch=armv8 default
         conan profile update settings.compiler=gcc default
         conan profile update settings.compiler.cppstd=20 default
