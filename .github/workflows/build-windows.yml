@@ -22,6 +22,7 @@ jobs:
         echo "PATH=$env:USERPROFILE\scoop\shims;$env:PATH" >> $GITHUB_ENV
         echo "KEK NINJA VERSION: $(ninja --version)"
         echo "KEK NINJA IS HERE: $((Get-Command ninja).Source)"
+        echo "KEK GCC IS HERE: $(g++ --version)"
         echo "GITHUB_ENV ? => $GITHUB_ENV"
         python -m venv venv
         venv\Scripts\Activate.ps1
@@ -36,13 +37,14 @@ jobs:
         echo "Checking scoop version: $(scoop --version)"
         echo "Checking cmake version: $(cmake --version)"
         echo "Checking ninja path: $((Get-Command ninja).Source)"
+        echo "Checking g++ version: $(g++ --version)"
         mkdir -p $env:USERPROFILE\.conan2\profiles
         echo [settings] > $env:USERPROFILE\.conan2\profiles\default
         echo os=Windows >> $env:USERPROFILE\.conan2\profiles\default
         echo arch=x86_64 >> $env:USERPROFILE\.conan2\profiles\default
         echo build_type=Release >> $env:USERPROFILE\.conan2\profiles\default
         echo compiler=gcc >> $env:USERPROFILE\.conan2\profiles\default
-        echo compiler.version=14 >> $env:USERPROFILE\.conan2\profiles\default
+        echo compiler.version=13 >> $env:USERPROFILE\.conan2\profiles\default
         echo compiler.libcxx=libstdc++11 >> $env:USERPROFILE\.conan2\profiles\default
         echo compiler.cppstd=20 >> $env:USERPROFILE\.conan2\profiles\default
         echo [conf] >> $env:USERPROFILE\.conan2\profiles\default
@@ -54,6 +56,7 @@ jobs:
       run: |
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         $env:PATH = $env:PATH -replace "C:\\mingw64\\bin;", ""
+        echo "Checking g++ version: $(g++ --version)"
         venv\Scripts\Activate.ps1
         conan install . --build=missing
         conan build .
