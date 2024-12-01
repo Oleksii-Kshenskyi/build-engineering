@@ -19,11 +19,6 @@ jobs:
       run: |
         Invoke-Expression "&([scriptblock]::Create((iwr -useb get.scoop.sh)))"
         scoop install cmake python ninja gcc
-        echo "PATH=$env:USERPROFILE\scoop\shims;$env:PATH" >> $GITHUB_ENV
-        echo "KEK NINJA VERSION: $(ninja --version)"
-        echo "KEK NINJA IS HERE: $((Get-Command ninja).Source)"
-        echo "KEK GCC IS HERE: $(g++ --version)"
-        echo "GITHUB_ENV ? => $GITHUB_ENV"
         python -m venv venv
         venv\Scripts\Activate.ps1
         python -m pip install --upgrade pip
@@ -33,11 +28,6 @@ jobs:
       run: |
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
         venv\Scripts\Activate.ps1
-        echo "Checking PATH: $env:PATH"
-        echo "Checking scoop version: $(scoop --version)"
-        echo "Checking cmake version: $(cmake --version)"
-        echo "Checking ninja path: $((Get-Command ninja).Source)"
-        echo "Checking g++ version: $(g++ --version)"
         mkdir -p $env:USERPROFILE\.conan2\profiles
         echo [settings] > $env:USERPROFILE\.conan2\profiles\default
         echo os=Windows >> $env:USERPROFILE\.conan2\profiles\default
@@ -49,14 +39,10 @@ jobs:
         echo compiler.cppstd=20 >> $env:USERPROFILE\.conan2\profiles\default
         echo [conf] >> $env:USERPROFILE\.conan2\profiles\default
         echo tools.cmake.cmaketoolchain:generator=Ninja >> $env:USERPROFILE\.conan2\profiles\default
-        conan profile show
-
 
     - name: Install dependencies and build everything
       run: |
         $env:PATH = "$env:USERPROFILE\scoop\apps\gcc\current\bin;$env:USERPROFILE\scoop\shims;$env:PATH"
-        dir $env:USERPROFILE\scoop\apps\gcc\current\bin
-        echo "Forced g++ version: $(g++ --version)"
         venv\Scripts\Activate.ps1
         conan install . --build=missing
         conan build .
@@ -70,9 +56,5 @@ jobs:
       run: |
         venv\Scripts\Activate.ps1
         $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
-        $env:PATH = $env:PATH -replace "C:\\mingw64\\bin;", ""
         $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
-        $CC = "$env:USERPROFILE\scoop\apps\gcc\current\bin\gcc.exe"
-        $CXX = "$env:USERPROFILE\scoop\apps\gcc\current\bin\g++.exe"
-        echo "S PATH: $env:PATH"
         python -m unittest test_pysort
