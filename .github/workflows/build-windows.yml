@@ -1,0 +1,54 @@
+name: Build and Test on Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        choco install cmake python --version 3.13.0 ninja mingw
+        python -m venv venv
+        venv\Scripts\Activate.ps1
+        python -m pip install --upgrade pip
+        pip install conan
+
+    - name: Create Windows Conan Profile
+      run: |
+        mkdir -p %USERPROFILE%\.conan2\profiles
+        echo [settings] > %USERPROFILE%\.conan2\profiles\default
+        echo os=Windows >> %USERPROFILE%\.conan2\profiles\default
+        echo arch=x86_64 >> %USERPROFILE%\.conan2\profiles\default
+        echo build_type=Release >> %USERPROFILE%\.conan2\profiles\default
+        echo compiler=gcc >> %USERPROFILE%\.conan2\profiles\default
+        echo compiler.version=14 >> %USERPROFILE%\.conan2\profiles\default
+        echo compiler.libcxx=libstdc++11 >> %USERPROFILE%\.conan2\profiles\default
+        echo compiler.cppstd=20 >> %USERPROFILE%\.conan2\profiles\default
+        echo [conf] >> %USERPROFILE%\.conan2\profiles\default
+        tools.cmake.cmaketoolchain:generator=Ninja >> %USERPROFILE%\.conan2\profiles\default
+
+    - name: Install dependencies and build everything
+      run: |
+        venv\Scripts\Activate.ps1
+        conan install . --build=missing
+        conan build .
+
+    - name: Run C++ Tests
+      run: |
+        cd build\Release && ctest --output-on-failure
+
+    - name: Run Python Tests
+      run: |
+        venv\Scripts\Activate.ps1
+        set PYTHONPATH=%cd%\build\Release;%cd%\test;%PYTHONPATH%
+        python -m unittest test_pysort
