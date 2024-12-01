@@ -35,6 +35,7 @@ jobs:
         echo "Checking PATH: $env:PATH"
         echo "Checking scoop version: $(scoop --version)"
         echo "Checking cmake version: $(cmake --version)"
+        echo "Checking ninja path: $((Get-Command ninja).Source)"
         mkdir -p $env:USERPROFILE\.conan2\profiles
         echo [settings] > $env:USERPROFILE\.conan2\profiles\default
         echo os=Windows >> $env:USERPROFILE\.conan2\profiles\default
@@ -46,7 +47,6 @@ jobs:
         echo compiler.cppstd=20 >> $env:USERPROFILE\.conan2\profiles\default
         echo [conf] >> $env:USERPROFILE\.conan2\profiles\default
         echo tools.cmake.cmaketoolchain:generator=Ninja >> $env:USERPROFILE\.conan2\profiles\default
-        echo tools.cmake.cmaketoolchain:make_program=$((Get-Command ninja).Source) >> $env:USERPROFILE\.conan2\profiles\default
         conan profile show
 
 
