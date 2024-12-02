@@ -27,7 +27,11 @@ A build engineering demo: C++/Python/CI.
 
 
 ### TODO:
+- The script needs to have commands:
+=> package: assembles the library into a single artifact.
+=> Also Windows versions of the scripts.
+
+
 - Pack and upload artifacts to Actions
-- Scripts to automate building and packaging
 - Scripts to automate environment setup for the DEPLOY version of the lib
 - Write comprehensive docs for the entire env setup, packaging, deployment and usage of the deployed version;
