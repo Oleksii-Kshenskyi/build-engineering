@@ -26,3 +26,7 @@ jobs:
     - name: Run C++ and Python Tests
       run: |
         python build.py test
+
+    - name: Pack the artifact
+      run: |
+        python build.py pack

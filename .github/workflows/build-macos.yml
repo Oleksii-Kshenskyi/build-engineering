@@ -26,3 +26,13 @@ jobs:
     - name: Run C++ and Python Tests
       run: |
         python3.13 build.py test
+
+    - name: Pack the artifact
+      run: |
+        python3.13 build.py pack
+
+    - name: Upload pysort artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: pysort
+        path: pysort.zip
