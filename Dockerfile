@@ -5,9 +5,8 @@ WORKDIR /app
 COPY . .
 RUN rm -rf venv build
 
-RUN chmod +x scripts/fedora/install-deps.sh
-RUN scripts/fedora/install-deps.sh
+RUN dnf install -y python3 python3-pip python3-virtualenv python3-devel
+RUN chmod -R +x scripts
+RUN python build.py install-deps
 
-RUN chmod +x scripts/fedora/build.sh
-RUN chmod +x scripts/fedora/test.sh
-CMD ["./scripts/fedora/docker-entrypoint.sh"]
+CMD ["python3", "build.py", "docker-entrypoint"]

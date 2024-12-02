@@ -21,8 +21,8 @@ jobs:
 
     - name: Build everything
       run: |
-        .\scripts\windows\build.ps1
+        python build.py build
 
     - name: Run C++ and Python Tests
       run: |
-        .\scripts\windows\test.ps1
+        python build.py test

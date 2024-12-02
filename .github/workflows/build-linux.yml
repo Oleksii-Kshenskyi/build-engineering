@@ -21,10 +21,10 @@ jobs:
 
     - name: Build everything
       run: |
-        ./scripts/ubuntu/build.sh
+        python3 build.py build
 
     # Run C++ tests
     - name: Run C++ and Python Tests
       run: |
-        ./scripts/ubuntu/test.sh
+        python3 build.py test
 
