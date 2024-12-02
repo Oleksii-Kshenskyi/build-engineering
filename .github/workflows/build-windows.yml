@@ -15,46 +15,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install dependencies and set up Conan on Windows
       run: |
-        Invoke-Expression "&([scriptblock]::Create((iwr -useb get.scoop.sh)))"
-        scoop install cmake python ninja gcc
-        python -m venv venv
-        venv\Scripts\Activate.ps1
-        python -m pip install --upgrade pip
-        pip install conan
+        .\scripts\windows\install-deps.ps1
 
-    - name: Create Windows Conan Profile
+    - name: Build everything
       run: |
-        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
-        venv\Scripts\Activate.ps1
-        mkdir -p $env:USERPROFILE\.conan2\profiles
-        echo [settings] > $env:USERPROFILE\.conan2\profiles\default
-        echo os=Windows >> $env:USERPROFILE\.conan2\profiles\default
-        echo arch=x86_64 >> $env:USERPROFILE\.conan2\profiles\default
-        echo build_type=Release >> $env:USERPROFILE\.conan2\profiles\default
-        echo compiler=gcc >> $env:USERPROFILE\.conan2\profiles\default
-        echo compiler.version=13 >> $env:USERPROFILE\.conan2\profiles\default
-        echo compiler.libcxx=libstdc++11 >> $env:USERPROFILE\.conan2\profiles\default
-        echo compiler.cppstd=20 >> $env:USERPROFILE\.conan2\profiles\default
-        echo [conf] >> $env:USERPROFILE\.conan2\profiles\default
-        echo tools.cmake.cmaketoolchain:generator=Ninja >> $env:USERPROFILE\.conan2\profiles\default
+        .\scripts\windows\build.ps1
 
-    - name: Install dependencies and build everything
+    - name: Run C++ and Python Tests
       run: |
-        $env:PATH = "$env:USERPROFILE\scoop\apps\gcc\current\bin;$env:USERPROFILE\scoop\shims;$env:PATH"
-        venv\Scripts\Activate.ps1
-        conan install . --build=missing
-        conan build .
-
-    - name: Run C++ Tests
-      run: |
-        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
-        cd build\Release && ctest --output-on-failure
-
-    - name: Run Python Tests
-      run: |
-        venv\Scripts\Activate.ps1
-        $env:PATH = "$env:USERPROFILE\scoop\shims;$env:PATH"
-        $env:PYTHONPATH = "$PWD\build\Release;$PWD\test;$PYTHONPATH"
-        python -m unittest test_pysort
+        .\scripts\windows\test.ps1
