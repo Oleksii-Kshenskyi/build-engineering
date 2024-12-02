@@ -17,7 +17,7 @@ cp test/test_pysort.py "$ARTIFACT_DIR/test/"
 touch "$ARTIFACT_DIR/lib/__init__.py"
 touch "$ARTIFACT_DIR/test/__init__.py"
 
-cp scripts/deployed/test.sh "$ARTIFACT_DIR/"
+cp scripts/deployed/test-macos.sh "$ARTIFACT_DIR/test.sh"
 
 zip -r "$ARTIFACT" "$ARTIFACT_DIR"
 
