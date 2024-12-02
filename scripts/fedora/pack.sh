@@ -21,6 +21,4 @@ cp scripts/deployed/test-linux.sh "$ARTIFACT_DIR/test.sh"
 
 zip -r "$ARTIFACT" "$ARTIFACT_DIR"
 
-rm -rf "$ARTIFACT_DIR"
-
 echo "Artifact created: $ARTIFACT"

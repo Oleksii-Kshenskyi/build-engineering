@@ -20,6 +20,4 @@ Copy-Item -Force -Path "scripts\deployed\test.ps1" -Destination $ArtifactDir\
 
 Compress-Archive -Path "$ArtifactDir\*" -DestinationPath $Artifact
 
-Remove-Item -Recurse -Force $ArtifactDir
-
 Write-Host "Artifact created: $Artifact"
